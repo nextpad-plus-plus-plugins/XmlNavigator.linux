@@ -670,6 +670,14 @@ static void cmdShowNavigator() {
             g_warning("[XmlNavigator] panel registration failed");
             return;
         }
+        // Declare the reopen command so the host restores the panel after a
+        // restart (GH linux#18): module = getName() ("XML Navigator"),
+        // cmdIndex 0 = "Show XML Navigator". Hosts < 1.1.0 return 0 — ignored.
+        NppPanelInfo info;
+        info.moduleName = PLUGIN_NAME;
+        info.cmdIndex   = 0;
+        npp(NPPM_DMM_SETPANELINFO, (unsigned long)(uintptr_t)g_panelHandle,
+            (long)(intptr_t)&info);
     }
     if (panelIsShown()) {
         npp(NPPM_DMM_HIDEPANEL, (unsigned long)g_panelHandle, 0);
